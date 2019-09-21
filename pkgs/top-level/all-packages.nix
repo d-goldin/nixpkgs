@@ -6409,7 +6409,7 @@ in
 
   termplay = callPackage ../tools/misc/termplay { };
 
-  testdisk-photorec = callPackage ../tools/system/testdisk-photorec { };
+  testdisk-photorec = throw "This package was a duplicate, please use testdisk instead";
 
   tewisay = callPackage ../tools/misc/tewisay { };
 
@@ -6836,7 +6836,14 @@ in
 
   xe = callPackage ../tools/system/xe { };
 
-  testdisk = callPackage ../tools/misc/testdisk { };
+  testdisk = libsForQt5.callPackage ../tools/system/testdisk {
+    enableJpeg = true;
+    enableZlib = true;
+    enableExtFs = true;
+    enableQt = true;
+    #enableEwf = true;
+    enableNtfs = true;
+  };
 
   textql = callPackage ../development/tools/textql { };
 
