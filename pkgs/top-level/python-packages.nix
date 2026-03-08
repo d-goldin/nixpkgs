@@ -11750,6 +11750,10 @@ self: super: with self; {
     callPackage ../development/python-modules/opentelemetry-semantic-conventions
       { };
 
+  opentelemetry-semantic-conventions-ai =
+    callPackage ../development/python-modules/opentelemetry-semantic-conventions-ai
+      { };
+
   opentelemetry-test-utils = callPackage ../development/python-modules/opentelemetry-test-utils { };
 
   opentelemetry-util-http = callPackage ../development/python-modules/opentelemetry-util-http { };
