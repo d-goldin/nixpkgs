@@ -27,6 +27,7 @@
 
   # dependencies
   aioprometheus,
+  amd-aiter,
   amd-quark,
   amdsmi,
   anthropic,
@@ -516,6 +517,7 @@ buildPythonPackage.override { stdenv = torch.stdenv; } (finalAttrs: {
     nvidia-ml-py
   ]
   ++ lib.optionals rocmSupport [
+    amd-aiter
     rocmPackages.rocminfo
     amdsmi
     datasets
