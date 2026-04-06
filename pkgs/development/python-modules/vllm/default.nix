@@ -93,6 +93,8 @@
   cupy,
   flashinfer,
   nvidia-ml-py,
+  # rocm-only
+  pybind11,
 
   # optional-dependencies
   # audio
@@ -584,11 +586,46 @@ buildPythonPackage.override { stdenv = torch.stdenv; } (finalAttrs: {
   pythonRelaxDeps = true;
 
   pythonImportsCheck = [ "vllm" ];
-  makeWrapperArgs = lib.optionals cudaSupport [
-    "--set"
-    "VLLM_NCCL_SO_PATH"
-    "${cudaPackages.nccl}/lib/libnccl.so"
-  ];
+  makeWrapperArgs =
+    lib.optionals cudaSupport [
+      "--set"
+      "VLLM_NCCL_SO_PATH"
+      "${cudaPackages.nccl}/lib/libnccl.so"
+    ]
+    ++ lib.optionals rocmSupport [
+      "--set"
+      "CPLUS_INCLUDE_PATH"
+      (lib.concatStringsSep ":" (
+        map (p: "${lib.getInclude p}/include") (
+          (with rocmPackages; [
+            rocthrust
+            rocprim
+            clr
+            hipsparse
+            hipblas
+            hipblas-common
+            hipblaslt
+            hipsolver
+            rocsparse
+            rocblas
+            rocsolver
+            hipfft
+          ])
+          ++ [
+            pybind11
+          ]
+        )
+      ))
+
+      "--set"
+      "HIP_DEVICE_LIB_PATH"
+      "${rocmPackages.rocm-device-libs}/amdgcn/bitcode"
+
+      "--prefix"
+      "PATH"
+      ":"
+      "${rocmPackages.clr}/bin"
+    ];
 
   passthru = {
     # make internal dependency available to overlays
