@@ -359,6 +359,12 @@ buildPythonPackage.override { stdenv = torch.stdenv; } (finalAttrs: {
     # QuACK and Cutlass DSL seem to be added only for FA4
     # which in our case handles its own deps
     ./0007-drop-quack-reqs.patch
+    # AOT/pre-compiled kernels, primarily targeting blackwell,
+    # should work ok with JIT
+    ./0008-drop-flashinfer-cubin.patch
+    # was just used to pin transitive dep version, which
+    # doesn't affect us at the moment
+    ./0009-drop-transitive-nvidia-cudnn-frontend.patch
   ];
 
   postPatch = ''
